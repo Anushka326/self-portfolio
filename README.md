@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://readme-typing-svg.herokuapp.com/?lines=AI+Developer;Problem+Solver;Building+Real+World+Solutions&center=true&width=500&height=50">
+</p>
+
 <h1 align="center">✨ Hi 👋, I'm Anushka Pise ✨</h1>
 <h3 align="center">🚀 AI Developer | Problem Solver | Building Real-World Solutions 🤖</h3>
 
