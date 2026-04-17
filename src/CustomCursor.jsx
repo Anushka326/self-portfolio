@@ -2,6 +2,16 @@ import { useEffect } from "react";
 
 export default function CustomCursor() {
   useEffect(() => {
+    // Check if it's a touch device or window is too small
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isSmallScreen = window.innerWidth < 768;
+    const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
+
+    if (isTouchDevice || isSmallScreen || !hasFinePointer) {
+      document.documentElement.style.cursor = 'auto';
+      return;
+    }
+
     const cursor = document.getElementById("cursor");
     const cursorGlow = document.getElementById("cursor-glow");
 
@@ -24,10 +34,18 @@ export default function CustomCursor() {
     window.addEventListener("mousemove", move);
 
     return () => {
-      document.documentElement.style.cursor = 'default';
+      document.documentElement.style.cursor = 'auto';
       window.removeEventListener("mousemove", move);
     };
   }, []);
+
+  // Don't render cursor elements on mobile/touch
+  if (typeof window !== 'undefined') {
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isSmallScreen = window.innerWidth < 768;
+    const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
+    if (isTouchDevice || isSmallScreen || !hasFinePointer) return null;
+  }
 
   return (
     <>

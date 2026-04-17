@@ -28,7 +28,7 @@ const ScrollReveal = ({ children }) => {
 };
 
 const Separator = () => (
-  <div className="max-w-7xl mx-auto px-6 my-10">
+  <div className="max-w-7xl mx-auto px-6 my-6 md:my-10">
     <div className="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-50" />
   </div>
 );
@@ -46,6 +46,7 @@ export default function Portfolio() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [typingSpeed, setTypingSpeed] = useState(100);
   const [hasStarted, setHasStarted] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Reset scroll on navigation
   useEffect(() => {
@@ -105,17 +106,29 @@ export default function Portfolio() {
         <div className="absolute top-[30%] left-[20%] w-[400px] h-[400px] bg-blue-600/5 rounded-full blur-[100px] mix-blend-screen animate-blob animation-delay-4000"></div>
       </div>
 
-      <div className="relative z-10 w-full">
+      <div className="relative z-10 w-full overflow-x-hidden">
         {/* Navbar */}
-        <nav className="flex justify-between items-center p-6 bg-slate-950/60 backdrop-blur-3xl fixed top-0 left-0 right-0 w-full z-50 transition-all duration-700 shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
+        <nav className="flex justify-between items-center px-6 py-4 md:py-6 bg-slate-950/80 backdrop-blur-3xl fixed top-0 left-0 right-0 w-full z-[60] transition-all duration-700 shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
           {/* Bottom gradient border matching the buttons */}
           <div className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-cyan-500 via-purple-600 to-cyan-500 opacity-50"></div>
 
-          <h1 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-cyan-400 tracking-wider uppercase drop-shadow-[0_0_15px_rgba(34,211,238,0.2)] hover:scale-105 transition-transform duration-500 cursor-default">
-            ANUSHKA'S PORTFOLIO
+          <h1 className="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-cyan-400 tracking-wider uppercase drop-shadow-[0_0_15px_rgba(34,211,238,0.2)] hover:scale-105 transition-transform duration-500 cursor-default shrink-0">
+            ANUSHKA
           </h1>
 
-          <div className="space-x-8 text-sm font-bold flex items-center">
+          {/* Hamburger Menu Button */}
+          <button 
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 z-[70] transition-all duration-300 relative"
+            aria-label="Toggle Menu"
+          >
+            <span className={`w-8 h-[2px] bg-cyan-400 transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-[10px]' : ''}`}></span>
+            <span className={`w-8 h-[2px] bg-purple-400 transition-all duration-300 ${isMenuOpen ? 'opacity-0' : ''}`}></span>
+            <span className={`w-8 h-[2px] bg-cyan-400 transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-[10px]' : ''}`}></span>
+          </button>
+
+          {/* Desktop Links */}
+          <div className="hidden md:flex space-x-4 lg:space-x-8 text-sm font-bold items-center">
             {[
               { name: 'Profile', href: '#hero' },
               { name: 'About', href: '#about' },
@@ -129,28 +142,62 @@ export default function Portfolio() {
               <a
                 key={link.name}
                 href={link.href}
-                className={`group relative px-4 py-2 transition-all duration-300 uppercase tracking-widest text-gray-300 hover:text-white ${link.hidden ? 'hidden lg:inline-block' : ''}`}
+                className={`group relative px-2 lg:px-4 py-2 transition-all duration-300 uppercase tracking-widest text-gray-300 hover:text-white ${link.hidden ? 'hidden lg:inline-block' : ''}`}
               >
                 <span className="relative z-10">{link.name}</span>
                 <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-gradient-to-r from-cyan-400 to-purple-500 transition-all duration-300 group-hover:w-full shadow-[0_0_15px_rgba(34,211,238,0.6)]"></span>
               </a>
             ))}
           </div>
+
+          {/* Mobile Menu Overlay & Drawer */}
+          {isMenuOpen && (
+            <div className="fixed inset-0 z-[55] md:hidden">
+              {/* Overlay */}
+              <div 
+                className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-fade-in"
+                onClick={() => setIsMenuOpen(false)}
+              ></div>
+              
+              {/* Drawer */}
+              <div 
+                className={`absolute top-0 right-0 h-screen w-3/4 max-w-sm bg-slate-950/95 border-l border-white/10 p-12 flex flex-col items-center justify-center gap-8 shadow-2xl transition-all duration-500 ease-out transform ${isMenuOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}`}
+              >
+                {[
+                  { name: 'Profile', href: '#hero' },
+                  { name: 'About', href: '#about' },
+                  { name: 'What I Do', href: '#what-i-do' },
+                  { name: 'Skills', href: '#skills' },
+                  { name: 'Projects', href: '#projects' },
+                  { name: 'Resume', href: '#resume' },
+                  { name: 'Contact', href: '#contact' }
+                ].map((link) => (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setIsMenuOpen(false)}
+                    className="text-2xl font-bold uppercase tracking-widest text-gray-300 hover:text-cyan-400 transition-colors min-h-[44px] flex items-center"
+                  >
+                    {link.name}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
         </nav>
 
         {/* Hero */}
-        <section id="hero" className="flex flex-col-reverse md:flex-row items-center justify-between max-w-7xl mx-auto pt-32 pb-16 px-6 md:px-12 min-h-[75vh] relative gap-12">
+        <section id="hero" className="flex flex-col-reverse md:flex-row items-center justify-between max-w-7xl mx-auto pt-40 pb-16 px-6 md:px-12 min-h-[85vh] md:min-h-[75vh] relative gap-10 md:gap-12">
 
-          {/* Fun Emojis - Adjusted for split layout */}
-          <div className="absolute top-[10%] left-[5%] md:left-[5%] text-4xl animate-bounce" style={{ animationDuration: '3s' }}>🚀</div>
-          <div className="absolute top-[80%] right-[10%] md:right-[5%] text-5xl animate-pulse" style={{ animationDuration: '2s' }}>✨</div>
-          <div className="absolute bottom-[5%] left-[20%] md:left-[35%] text-4xl animate-spin" style={{ animationDuration: '6s' }}>☕</div>
-          <div className="absolute top-[15%] right-[15%] md:right-[45%] text-5xl animate-bounce" style={{ animationDuration: '4s' }}>💡</div>
+          {/* Fun Emojis - Hidden on very small screens or adjusted */}
+          <div className="absolute top-[10%] left-[5%] text-2xl md:text-4xl animate-bounce" style={{ animationDuration: '3s' }}>🚀</div>
+          <div className="absolute top-[80%] right-[10%] text-3xl md:text-5xl animate-pulse" style={{ animationDuration: '2s' }}>✨</div>
+          <div className="absolute top-[15%] right-[15%] text-3xl md:text-5xl animate-bounce" style={{ animationDuration: '4s' }}>💡</div>
 
           {/* Left Text Content */}
           <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left z-10 w-full">
             <h1 
-              className="text-3xl md:text-5xl font-extrabold tracking-tight mb-6 group cursor-default leading-tight animate-fade-in-up opacity-0"
+              className="text-2xl sm:text-3xl md:text-5xl font-extrabold tracking-tight mb-4 sm:mb-6 group cursor-default leading-tight animate-fade-in-up opacity-0"
               style={{ animationDelay: '200ms', animationFillMode: 'forwards' }}
             >
               Hi, I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 drop-shadow-sm group-hover:from-pink-400 group-hover:to-cyan-400 transition-all duration-700">Anushka</span>
@@ -158,17 +205,17 @@ export default function Portfolio() {
             </h1>
 
             <h2 
-              className="text-5xl md:text-[5rem] lg:text-[5.5rem] font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 mb-8 leading-[1.05] tracking-tight animate-fade-in-up opacity-0"
+              className="text-4xl sm:text-5xl md:text-[5rem] lg:text-[5.5rem] font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 mb-6 sm:mb-8 leading-[1.1] md:leading-[1.05] tracking-tight animate-fade-in-up opacity-0"
               style={{ animationDelay: '400ms', animationFillMode: 'forwards' }}
             >
-              AI Developer <br className="hidden md:block focus:hidden" /> & Problem Solver
+              AI Developer <br className="hidden md:block" /> & Problem Solver
             </h2>
 
             <div 
-              className="inline-block w-full max-w-lg mb-10 animate-fade-in-up opacity-0"
+              className="inline-block w-full max-w-lg mb-8 sm:mb-10 animate-fade-in-up opacity-0"
               style={{ animationDelay: '600ms', animationFillMode: 'forwards' }}
             >
-              <p className="text-lg md:text-xl text-white font-mono font-light leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl text-white font-mono font-light leading-relaxed px-4 md:px-0">
                 {currentText}
                 <span className="inline-block w-[3px] h-[1.1em] bg-cyan-400 ml-1 animate-blink align-middle translate-y-[-1px]"></span>
               </p>
@@ -202,7 +249,7 @@ export default function Portfolio() {
 
           {/* Right Image Content */}
           <div className="flex-1 flex justify-center md:justify-end items-center z-10 w-full mb-10 md:mb-0">
-            <div className="transform transition-all duration-700 hover:scale-[1.05] hover:-translate-y-2 relative group w-72 h-72 md:w-[26rem] md:h-[26rem] lg:w-[30rem] lg:h-[30rem] cursor-pointer">
+            <div className="transform transition-all duration-700 hover:scale-[1.05] hover:-translate-y-2 relative group w-40 h-40 sm:w-56 sm:h-56 md:w-[26rem] md:h-[26rem] lg:w-[30rem] lg:h-[30rem] cursor-pointer">
               {/* Pulsing rings */}
               <div className="absolute inset-0 rounded-full border-2 border-cyan-400/30 animate-ping opacity-20"></div>
               {/* Background Glow */}
@@ -221,13 +268,13 @@ export default function Portfolio() {
 
         {/* About */}
         <ScrollReveal>
-          <section id="about" className="px-6 py-20 max-w-5xl mx-auto">
-            <h2 className="text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-cyan-400 mb-16 tracking-wide uppercase">About Me</h2>
+          <section id="about" className="px-6 py-12 md:py-24 max-w-5xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-cyan-400 mb-10 md:mb-16 tracking-wide uppercase">About Me</h2>
 
-            <div className="text-xl md:text-2xl text-white leading-relaxed font-light text-justify bg-white/5 p-10 md:p-12 rounded-3xl border border-white/10 backdrop-blur-xl shadow-xl relative overflow-hidden transform transition-all duration-500 hover:scale-[1.01] hover:-translate-y-2 hover:shadow-[0_0_50px_rgba(168,85,247,0.4)] hover:border-purple-500/30 hover:bg-white/10 group cursor-default">
+            <div className="text-base sm:text-lg md:text-xl text-white leading-relaxed font-light text-justify bg-white/5 p-8 md:p-12 rounded-3xl border border-white/10 backdrop-blur-xl shadow-xl relative overflow-hidden transform transition-all duration-500 hover:scale-[1.01] hover:-translate-y-2 hover:shadow-[0_0_50px_rgba(168,85,247,0.4)] hover:border-purple-500/30 hover:bg-white/10 group cursor-default">
               {/* Subtle glow inside the about card */}
-              <div className="absolute -top-24 -right-24 w-48 h-48 bg-purple-500/20 rounded-full blur-3xl"></div>
-              <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-cyan-500/20 rounded-full blur-3xl"></div>
+              <div className="absolute -top-24 -right-24 w-32 h-32 md:w-48 md:h-48 bg-purple-500/20 rounded-full blur-3xl"></div>
+              <div className="absolute -bottom-24 -left-24 w-32 h-32 md:w-48 md:h-48 bg-cyan-500/20 rounded-full blur-3xl"></div>
 
               <p className="mb-6 relative z-10">
                 AI & Data Science student with hands-on experience in building real-world applications such as an Image Captioning System for visually impaired users, SnapBudget (an OCR-based expense tracker), and SymptoGuard AI, an intelligent healthcare assistant for symptom analysis. I also developed an Android Language Learning App as part of my exploration in mobile development.
@@ -242,50 +289,50 @@ export default function Portfolio() {
 
         {/* What I Do */}
         <ScrollReveal>
-          <section id="what-i-do" className="px-6 py-20 max-w-7xl mx-auto">
-            <h2 className="text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-cyan-400 mb-16 tracking-wide uppercase">What I Do</h2>
+          <section id="what-i-do" className="px-6 py-12 md:py-24 max-w-7xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-cyan-400 mb-10 md:mb-16 tracking-wide uppercase">What I Do</h2>
 
-            <div className="grid md:grid-cols-2 gap-8 lg:gap-10 text-left">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 text-left">
               {/* Card 1 */}
-              <div className="flex flex-col bg-white/5 backdrop-blur-xl border border-white/10 p-8 md:p-10 rounded-3xl transform transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(6,182,212,0.4)] hover:border-cyan-400/40 hover:bg-white/10 group cursor-default">
-                <h3 className="text-3xl font-bold text-white mb-4 flex items-center gap-3">
-                  <span className="text-3xl group-hover:scale-110 transition-transform origin-bottom">🧠</span>
+              <div className="flex flex-col bg-white/5 backdrop-blur-xl border border-white/10 p-7 md:p-10 rounded-3xl transform transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(6,182,212,0.4)] hover:border-cyan-400/40 hover:bg-white/10 group cursor-default">
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 md:mb-4 flex items-center gap-3">
+                  <span className="text-2xl md:text-3xl group-hover:scale-110 transition-transform origin-bottom">🧠</span>
                   <span className="group-hover:text-cyan-400 transition-colors">AI & ML Solutions</span>
                 </h3>
-                <p className="text-gray-300 font-light text-xl leading-relaxed">
+                <p className="text-gray-300 font-light text-base md:text-xl leading-relaxed">
                   Designing and building AI-powered applications that solve real-world problems using machine learning and computer vision techniques.
                 </p>
               </div>
 
               {/* Card 2 */}
-              <div className="flex flex-col bg-white/5 backdrop-blur-xl border border-white/10 p-8 md:p-10 rounded-3xl transform transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(168,85,247,0.4)] hover:border-purple-400/40 hover:bg-white/10 group cursor-default">
-                <h3 className="text-3xl font-bold text-white mb-4 flex items-center gap-3">
-                  <span className="text-3xl group-hover:scale-110 transition-transform origin-bottom">💻</span>
+              <div className="flex flex-col bg-white/5 backdrop-blur-xl border border-white/10 p-7 md:p-10 rounded-3xl transform transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(168,85,247,0.4)] hover:border-purple-400/40 hover:bg-white/10 group cursor-default">
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 md:mb-4 flex items-center gap-3">
+                  <span className="text-2xl md:text-3xl group-hover:scale-110 transition-transform origin-bottom">💻</span>
                   <span className="group-hover:text-purple-400 transition-colors">Full-Stack Development</span>
                 </h3>
-                <p className="text-gray-300 font-light text-xl leading-relaxed">
+                <p className="text-gray-300 font-light text-base md:text-xl leading-relaxed">
                   Developing interactive web applications with modern technologies, focusing on performance, usability, and clean user interfaces.
                 </p>
               </div>
 
               {/* Card 3 */}
-              <div className="flex flex-col bg-white/5 backdrop-blur-xl border border-white/10 p-8 md:p-10 rounded-3xl transform transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(59,130,246,0.4)] hover:border-blue-400/40 hover:bg-white/10 group cursor-default">
-                <h3 className="text-3xl font-bold text-white mb-4 flex items-center gap-3">
-                  <span className="text-3xl group-hover:scale-110 transition-transform origin-bottom">📊</span>
+              <div className="flex flex-col bg-white/5 backdrop-blur-xl border border-white/10 p-7 md:p-10 rounded-3xl transform transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(59,130,246,0.4)] hover:border-blue-400/40 hover:bg-white/10 group cursor-default">
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 md:mb-4 flex items-center gap-3">
+                  <span className="text-2xl md:text-3xl group-hover:scale-110 transition-transform origin-bottom">📊</span>
                   <span className="group-hover:text-blue-400 transition-colors">Data & Problem Solving</span>
                 </h3>
-                <p className="text-gray-300 font-light text-xl leading-relaxed">
+                <p className="text-gray-300 font-light text-base md:text-xl leading-relaxed">
                   Analyzing data and building logical solutions to improve decision-making and create efficient, scalable systems.
                 </p>
               </div>
 
               {/* Card 4 */}
-              <div className="flex flex-col bg-white/5 backdrop-blur-xl border border-white/10 p-8 md:p-10 rounded-3xl transform transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(236,72,153,0.4)] hover:border-pink-400/40 hover:bg-white/10 group cursor-default">
-                <h3 className="text-3xl font-bold text-white mb-4 flex items-center gap-3">
-                  <span className="text-3xl group-hover:scale-110 transition-transform origin-bottom">🚀</span>
+              <div className="flex flex-col bg-white/5 backdrop-blur-xl border border-white/10 p-7 md:p-10 rounded-3xl transform transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(236,72,153,0.4)] hover:border-pink-400/40 hover:bg-white/10 group cursor-default">
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 md:mb-4 flex items-center gap-3">
+                  <span className="text-2xl md:text-3xl group-hover:scale-110 transition-transform origin-bottom">🚀</span>
                   <span className="group-hover:text-pink-400 transition-colors">Open Source & Learning</span>
                 </h3>
-                <p className="text-gray-300 font-light text-xl leading-relaxed">
+                <p className="text-gray-300 font-light text-base md:text-xl leading-relaxed">
                   Actively learning, exploring new technologies, and contributing to projects to continuously grow as a developer.
                 </p>
               </div>
@@ -298,8 +345,8 @@ export default function Portfolio() {
 
         {/* Skills */}
         <ScrollReveal>
-          <section id="skills" className="px-6 py-24 max-w-7xl mx-auto">
-            <h2 className="text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-cyan-400 mb-20 tracking-wide uppercase">Skills & Tech Stack</h2>
+          <section id="skills" className="px-6 py-12 md:py-24 max-w-7xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-cyan-400 mb-12 md:mb-20 tracking-wide uppercase">Skills & Tech Stack</h2>
 
             <div className="space-y-16">
               {[
@@ -344,9 +391,9 @@ export default function Portfolio() {
                   ]
                 }
               ].map((cat, idx) => (
-                <div key={idx} className="space-y-8">
-                  <h3 className="text-xl font-bold text-gray-400 uppercase tracking-widest pl-2 border-l-4 border-cyan-500/50">{cat.category}</h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+                <div key={idx} className="space-y-6 md:space-y-8">
+                  <h3 className="text-lg md:text-xl font-bold text-gray-400 uppercase tracking-widest pl-2 border-l-4 border-cyan-500/50">{cat.category}</h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6">
                     {cat.skills.map((skill, sIdx) => (
                       <div
                         key={sIdx}
@@ -379,8 +426,8 @@ export default function Portfolio() {
 
         {/* Currently Doing */}
         <ScrollReveal>
-          <section id="currently-doing" className="px-6 py-20 max-w-6xl mx-auto">
-            <h2 className="text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-cyan-400 mb-16 tracking-wide uppercase">What I'm Currently Doing</h2>
+          <section id="currently-doing" className="px-6 py-12 md:py-24 max-w-6xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-cyan-400 mb-10 md:mb-16 tracking-wide uppercase">What I'm Currently Doing</h2>
 
             <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-10 md:p-12 rounded-3xl transform transition-all duration-500 hover:-translate-y-2 hover:scale-[1.01] hover:shadow-[0_0_50px_rgba(168,85,247,0.4)] hover:border-purple-400/40 hover:bg-white/10 group">
               <ul className="text-lg md:text-xl text-gray-300 font-light space-y-6 list-none">
@@ -409,8 +456,8 @@ export default function Portfolio() {
 
         {/* Projects */}
         <ScrollReveal>
-          <section id="projects" className="px-6 py-24 max-w-7xl mx-auto">
-            <h2 className="text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-cyan-400 mb-16 tracking-wide uppercase">Featured Projects</h2>
+          <section id="projects" className="px-6 py-12 md:py-24 max-w-7xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-cyan-400 mb-10 md:mb-16 tracking-wide uppercase">Featured Projects</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {/* Project 1 */}
@@ -533,14 +580,14 @@ export default function Portfolio() {
 
         {/* Resume Section */}
         <ScrollReveal>
-          <section id="resume" className="px-6 py-20 max-w-5xl mx-auto flex justify-center items-center relative z-10">
+          <section id="resume" className="px-6 py-12 md:py-20 max-w-5xl mx-auto flex justify-center items-center relative z-10">
             <a
               href="/Resume.pdf"
               download="Anushka_Resume.pdf"
-              className="mt-10 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-black py-6 px-16 rounded-full shadow-[0_0_30px_rgba(168,85,247,0.5)] hover:shadow-[0_0_50px_rgba(6,182,212,0.8)] transform hover:-translate-y-2 hover:scale-110 transition-all duration-300 flex items-center gap-5 group text-2xl uppercase tracking-widest"
+              className="mt-6 md:mt-10 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-black py-4 px-10 md:py-6 md:px-16 rounded-full shadow-[0_0_30px_rgba(168,85,247,0.5)] hover:shadow-[0_0_50px_rgba(6,182,212,0.8)] transform hover:-translate-y-2 hover:scale-110 transition-all duration-300 flex items-center justify-center gap-4 md:gap-5 group text-lg md:text-2xl uppercase tracking-widest min-h-[50px]"
             >
               <span>Download Resume</span>
-              <span className="group-hover:animate-bounce text-3xl">📄</span>
+              <span className="group-hover:animate-bounce text-2xl md:text-3xl">📄</span>
             </a>
           </section>
         </ScrollReveal>
@@ -549,27 +596,28 @@ export default function Portfolio() {
 
         {/* Contact */}
         <ScrollReveal>
-          <section id="contact" className="text-center py-24 mb-10 w-full max-w-5xl mx-auto px-6">
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-16 shadow-2xl relative overflow-hidden group">
+          <section id="contact" className="text-center py-12 md:py-24 mb-10 w-full max-w-5xl mx-auto px-6">
+            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-16 shadow-2xl relative overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 opacity-50 group-hover:scale-110 transition-transform duration-700"></div>
 
-              <div className="absolute top-10 right-10 text-5xl animate-bounce opacity-20 group-hover:opacity-100 transition-opacity duration-500 hidden md:block">📬</div>
-              <div className="absolute bottom-10 left-10 text-5xl animate-bounce opacity-20 group-hover:opacity-100 transition-opacity duration-500 hidden md:block" style={{ animationDelay: "0.5s" }}>💌</div>
+              {/* Decorative Floating Symbols - hidden/reduced on mobile */}
+              <div className="absolute top-10 right-10 text-5xl animate-bounce opacity-20 group-hover:opacity-100 transition-opacity duration-500 hidden lg:block">📬</div>
+              <div className="absolute bottom-10 left-10 text-5xl animate-bounce opacity-20 group-hover:opacity-100 transition-opacity duration-500 hidden lg:block" style={{ animationDelay: "0.5s" }}>💌</div>
 
               <div className="relative z-10">
-                <h2 className="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 mb-12 uppercase tracking-widest leading-normal pb-2">Let's Connect</h2>
-                <div className="flex flex-col sm:flex-row justify-center gap-6 flex-wrap">
-                  <a href="mailto:anushkanpise@gmail.com" className="bg-white/10 px-8 py-4 rounded-xl border border-white/20 hover:border-pink-400 hover:bg-white/20 hover:text-white transition-all duration-300 flex items-center justify-center gap-3 font-semibold tracking-wide hover:-translate-y-1 group/btn shadow-[0_0_15px_rgba(236,72,153,0)] hover:shadow-[0_0_20px_rgba(236,72,153,0.4)]">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 mb-8 md:mb-12 uppercase tracking-widest leading-normal pb-2">Let's Connect</h2>
+                <div className="flex flex-col sm:flex-row justify-center gap-4 md:gap-6 flex-wrap">
+                  <a href="mailto:anushkanpise@gmail.com" className="bg-white/10 px-6 py-3 md:px-8 md:py-4 rounded-xl border border-white/20 hover:border-pink-400 hover:bg-white/20 hover:text-white transition-all duration-300 flex items-center justify-center gap-3 font-semibold tracking-wide hover:-translate-y-1 group/btn shadow-[0_0_15px_rgba(236,72,153,0)] hover:shadow-[0_0_20px_rgba(236,72,153,0.4)] min-h-[44px]">
                     <span className="group-hover/btn:animate-pulse text-xl">📧</span>
-                    <span>Email: anushkanpise@gmail.com</span>
+                    <span className="text-sm md:text-base">Email: anushkanpise@gmail.com</span>
                   </a>
-                  <a href="https://github.com/Anushka326" target="_blank" rel="noopener noreferrer" className="bg-white/10 px-8 py-4 rounded-xl border border-white/20 hover:border-cyan-400 hover:bg-white/20 hover:text-white transition-all duration-300 flex items-center justify-center gap-3 font-semibold tracking-wide hover:-translate-y-1 group/btn shadow-[0_0_15px_rgba(6,182,212,0)] hover:shadow-[0_0_20px_rgba(6,182,212,0.4)]">
+                  <a href="https://github.com/Anushka326" target="_blank" rel="noopener noreferrer" className="bg-white/10 px-6 py-3 md:px-8 md:py-4 rounded-xl border border-white/20 hover:border-cyan-400 hover:bg-white/20 hover:text-white transition-all duration-300 flex items-center justify-center gap-3 font-semibold tracking-wide hover:-translate-y-1 group/btn shadow-[0_0_15px_rgba(6,182,212,0)] hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] min-h-[44px]">
                     <span className="group-hover/btn:animate-bounce text-xl">💻</span>
-                    <span>GitHub: Anushka326</span>
+                    <span className="text-sm md:text-base">GitHub: Anushka326</span>
                   </a>
-                  <a href="https://www.linkedin.com/in/anushka-p-978a8b327/" target="_blank" rel="noopener noreferrer" className="bg-white/10 px-8 py-4 rounded-xl border border-white/20 hover:border-purple-400 hover:bg-white/20 hover:text-white transition-all duration-300 flex items-center justify-center gap-3 font-semibold tracking-wide hover:-translate-y-1 group/btn shadow-[0_0_15px_rgba(168,85,247,0)] hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]">
+                  <a href="https://www.linkedin.com/in/anushka-p-978a8b327/" target="_blank" rel="noopener noreferrer" className="bg-white/10 px-6 py-3 md:px-8 md:py-4 rounded-xl border border-white/20 hover:border-purple-400 hover:bg-white/20 hover:text-white transition-all duration-300 flex items-center justify-center gap-3 font-semibold tracking-wide hover:-translate-y-1 group/btn shadow-[0_0_15px_rgba(168,85,247,0)] hover:shadow-[0_0_20px_rgba(168,85,247,0.4)] min-h-[44px]">
                     <span className="group-hover/btn:animate-ping text-xl">🤝</span>
-                    <span>LinkedIn: Anushka Pise</span>
+                    <span className="text-sm md:text-base">LinkedIn: Anushka Pise</span>
                   </a>
                 </div>
               </div>
